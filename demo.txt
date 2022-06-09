@@ -1,0 +1,44 @@
+ <form id="addForm_ID">
+            <div>
+              <label>Product Name</label>
+              
+              <input type="text" name="fullName" id="p_name" />
+            </div>
+            <div>
+              <label>Details</label>
+              <input type="text" name="empCode" id="p_details" />
+            </div>
+            <div>
+              <label>Price</label>
+              <input type="text" name="salary" id="p_price" />
+            </div>
+            <div>
+              <label>Category</label>
+              <input type="text" name="salary" id="p_category" />
+            </div>
+            <div class="form-action-buttons ">
+              <input type="submit" value="Submit" id="btnSubmit"/>
+           
+          </form>
+
+
+
+            <table>
+      <tr>
+        <td>
+          <table class="list" id="list_id">
+            <thead>
+              <tr>
+                <th>Product Name</th>
+                <th>Details</th>
+                <th>Price</th>
+                <th>Category</th>
+                <th>Action</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="output"></tbody>
+          </table>
+        </td>
+      </tr>
+    </table>
