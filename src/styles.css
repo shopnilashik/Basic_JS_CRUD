@@ -78,12 +78,12 @@ label.validation-error{
 .productNameValidation.show {
     visibility: visible;
 }
-#popup-modal{
+#popup-modal-delete{
     display: flex;
     opacity: 0;
     pointer-events: none;
 }
-#popup-modal.show{
+#popup-modal-delete.show{
     pointer-events: auto;
     opacity: 1;
 }
