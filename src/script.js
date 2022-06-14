@@ -8,6 +8,7 @@ var pname = document.getElementById("productNameValidation");
 var x = document.getElementById("p_name");
 const image = document.getElementById("image");
 let imageName = "";
+let files = "";
 let allUser = [];
 let u_id = "";
 // Update value
@@ -168,63 +169,12 @@ function editUser(id) {
   priceValue.value = user.p_price;
   categoryValue.value = user.p_category;
 }
-// EDIT PRODUCT
-btnSubmit.addEventListener("click", (e) => {
-  e.preventDefault();
-  if (u_id > 0) {
-    // fetch("http://localhost/sct/api/products/update.php", {
-    //   method: "PUT",
-    //   headers: {
-    //     "Content-type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     id: u_id,
-    //     p_name: p_nameValue.value,
-    //     p_details: detailValue.value,
-    //     p_category: p_category.value,
-    //     p_price: p_price.value,
-    //   }),
-    // })
-    //   .then((res) => res.json())
-    //   .then(() => showdata())
-    //   .then(() => {
-    //     u_id = "";
-    //   });
-  } else {
-    // if (isNaN(categoryValue.value)) {
-    //   console.log(image.value);
-    //   pname.innerHTML = "Please Select a Category";
-    // } else if (p_nameValue.value.length > 4 && p_nameValue.value.length < 20) {
-    //   fetch("http://localhost/sct/api/products/create.php", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-type": "application/json",
-    //     },
-    //     body: JSON.stringify({
-    //       ProductName: p_nameValue.value,
-    //       ProductDetails: detailValue.value,
-    //       categoriy_id: categoryValue.value,
-    //       ProductPrice: p_price.value,
-    //       image: imageName,
-    //     }),
-    //   })
-    //     .then((res) => res.json())
-    //     .then((data) => {
-    //       const dataArr = [];
-    //       dataArr.push(data);
-    //       renderUser(dataArr);
-    //     })
-    //     .then(() => showdata());
-    // } else {
-    //   pname.innerHTML = "Please Select a Category";
-    // }
-  }
-});
+
 function upload(event) {
   const value = event.target.value;
   // this will return C:\fakepath\somefile.ext
   // console.log(value);
-  const files = event.target.files;
+  files = event.target.files;
 
   //this will return an ARRAY of File object
   console.log(files);
@@ -235,14 +185,40 @@ function upload(event) {
 }
 addForm.addEventListener("submit", (event) => {
   event.preventDefault();
-  console.log("Hello");
-  const formData = new FormData(addForm);
-});
-// get form element from the dom
-const newsletterForm = document.getElementById("newsletter-form");
 
-// handle signup on submit
-newsletterForm.addEventListener("submit", (event) => {
-  event.preventDefault(); // prevent page refresh
-  console.log("first");
+  const formData = new FormData(document.getElementById("addForm_ID"));
+
+  // console.log(formData);
+  for (const value of formData.values()) {
+    console.log(value);
+  }
+
+  if (isNaN(categoryValue.value)) {
+    console.log(image.value);
+    pname.innerHTML = "Please Select a Category";
+  } else if (p_nameValue.value.length > 4 && p_nameValue.value.length < 20) {
+    fetch("http://localhost/sct/api/products/create.php", {
+      method: "POST",
+      headers: {
+        "Content-type": "multipart/form-data",
+      },
+      body: JSON.stringify({
+        ProductName: p_nameValue.value,
+        ProductDetails: detailValue.value,
+        categoriy_id: categoryValue.value,
+        ProductPrice: p_price.value,
+        image: files,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        const dataArr = [];
+        dataArr.push(data);
+        renderUser(dataArr);
+      })
+      .then(() => showdata());
+  } else {
+    pname.innerHTML = "Please Select a Category";
+  }
+  console.log("End");
 });

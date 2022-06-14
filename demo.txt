@@ -243,3 +243,170 @@
     <script src="script.js"></script>
   </body>
 </html>
+
+
+
+
+
+
+ <div class="py-6 px-6 lg:px-8">
+                <h3
+                  id="title"
+                  class="mb-4 text-xl font-medium text-gray-900 dark:text-white"
+                >
+                  Add New Product
+                </h3>
+
+                <div>
+                  <label
+                    for="product Name"
+                    class="block mb-1 text-sm font-medium text-gray-900 dark:text-gray-300"
+                    >Product Name</label
+                  >
+                  <span
+                    id="productNameValidation"
+                    for="product Name validation"
+                    class="block mb-1 text-sm font-medium text-red-500"
+                  ></span>
+                  <input
+                    onkeyup="nameValidation()"
+                    autocomplete="on"
+                    type="text"
+                    for="Name"
+                    id="p_name"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                    placeholder="Enter Product Name"
+                    required
+                  />
+                </div>
+                <div class="flex justify-center">
+                  <div class="mb-3 xl:w-96">
+                    <label
+                      class="block mb-1 text-sm font-medium text-gray-900 dark:text-gray-300"
+                      >Product Details</label
+                    >
+                    <textarea
+                      class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-gray-300 bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                      id="p_details"
+                      rows="3"
+                      required
+                      placeholder="Give your product details"
+                    ></textarea>
+                  </div>
+                </div>
+                <div>
+                  <label
+                    class="block mb-1 text-sm font-medium text-gray-900 dark:text-gray-300"
+                    >Product Price</label
+                  >
+                  <input
+                    onkeypress="return priceValidation(event)"
+                    oninput="restrict(this)"
+                    type="text"
+                    for="price"
+                    id="p_price"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                    placeholder="Enter Product Price"
+                    required
+                  />
+                </div>
+
+                <div class="grid">
+                  <label
+                    class="block mb-1 text-sm font-medium text-gray-900 dark:text-gray-300"
+                    >Product Category</label
+                  >
+                  <div class="mb-3 xl:w-96">
+                    <select
+                      class="block form-select appearance-none w-[350px] px-3 py-1.5 text-base font-normal text-gray-700 bg-gray-300 bg-clip-padding bg-no-repeat border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                      aria-label="Default select example"
+                      id="p_category"
+                    >
+                      <option>Select Category</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- IMAGE   -->
+                <div class="flex justify-center">
+                  <div class="mb-3 w-96">
+                    <label
+                      for="formFileSm"
+                      class="form-label inline-block mb-2 text-gray-700"
+                      >Small file input example</label
+                    >
+                    <input
+                      id="image"
+                      onChange="upload(event)"
+                      class="form-control block w-full px-2 py-1 text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                      id="formFileSm"
+                      type="file"
+                    />
+                  </div>
+                </div>
+                <button
+                  id="btnSubmit"
+                  type="submit"
+                  class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                >
+                  Submit
+                </button>
+              </div>
+
+
+
+
+
+
+              // EDIT PRODUCT
+btnSubmit.addEventListener("click", (e) => {
+  e.preventDefault();
+  if (u_id > 0) {
+    fetch("http://localhost/sct/api/products/update.php", {
+      method: "PUT",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        id: u_id,
+        p_name: p_nameValue.value,
+        p_details: detailValue.value,
+        p_category: p_category.value,
+        p_price: p_price.value,
+      }),
+    })
+      .then((res) => res.json())
+      .then(() => showdata())
+      .then(() => {
+        u_id = "";
+      });
+  } else {
+    if (isNaN(categoryValue.value)) {
+      console.log(image.value);
+      pname.innerHTML = "Please Select a Category";
+    } else if (p_nameValue.value.length > 4 && p_nameValue.value.length < 20) {
+      fetch("http://localhost/sct/api/products/create.php", {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({
+          ProductName: p_nameValue.value,
+          ProductDetails: detailValue.value,
+          categoriy_id: categoryValue.value,
+          ProductPrice: p_price.value,
+          image: imageName,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          const dataArr = [];
+          dataArr.push(data);
+          renderUser(dataArr);
+        })
+        .then(() => showdata());
+    } else {
+      pname.innerHTML = "Please Select a Category";
+    }
+  }
+});
