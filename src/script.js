@@ -7,14 +7,20 @@ const categoryValue = document.getElementById("p_category");
 var pname = document.getElementById("productNameValidation");
 var x = document.getElementById("p_name");
 const image = document.getElementById("image");
+let createURL = "http://localhost/sct/api/products/create.php";
+let updateURL = "http://localhost/sct/api/products/update.php";
+let url = "";
 let imageName = "";
 let files = "";
 let allUser = [];
 let u_id = "";
+let method = "";
+let fileSize;
+let imageValidation = true;
+let categoryValidation = true;
 // Update value
 const output = document.querySelector("#output");
 const btnSubmit = document.querySelector("#btnSubmit");
-const url = "https://jsonplaceholder.typicode.com/users";
 const deurl = "http://localhost/sct/api/products/delete.php";
 //modals
 const open = document.getElementById("open");
@@ -31,6 +37,9 @@ showdata();
 open.addEventListener("click", () => {
   modal_container.classList.add("show");
   title.innerHTML = "Add New Product";
+  method = "POST";
+  url = createURL;
+  categoryValidation = true;
   close.addEventListener("click", () => {
     p_nameValue.value = "";
     detailValue.value = "";
@@ -92,6 +101,9 @@ function priceValidation(evt) {
     return false;
 
   return true;
+}
+function categoriesFun() {
+  categoryValidation = true;
 }
 //VALIDATION ENDS
 ////////////////////////////////////////////////////////////////
@@ -156,7 +168,9 @@ function deleteUser(id) {
 function editUser(id) {
   modal_container.classList.add("show");
   title.innerHTML = "Update Product";
-
+  method = "POST";
+  url = updateURL;
+  categoryValidation = true;
   const close = document.getElementById("close");
   close.addEventListener("click", () => {
     modal_container.classList.remove("show");
@@ -168,47 +182,55 @@ function editUser(id) {
   detailValue.value = user.p_details;
   priceValue.value = user.p_price;
   categoryValue.value = user.p_category;
+  image.value = imageName;
 }
 
 function upload(event) {
   const value = event.target.value;
-  // this will return C:\fakepath\somefile.ext
-  // console.log(value);
   files = event.target.files;
-
-  //this will return an ARRAY of File object
-  console.log(files);
   for (let file of files) {
     imageName = file.name;
-    // console.log(file.size);
+    console.log(imageName);
+    fileSize = file.size;
+  }
+  var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+  const file = Math.round(fileSize / 1024);
+  if (!allowedExtensions.exec(value)) {
+    pname.innerHTML = "Invalid File type";
+    imageValidation = false;
+    return false;
+  }
+  if (file >= 1024) {
+    pname.innerHTML = "more than 1024";
+  }
+  if (file <= 1024) {
+    pname.innerHTML = "less than 1024";
   }
 }
 addForm.addEventListener("submit", (event) => {
   event.preventDefault();
-
   const formData = new FormData(document.getElementById("addForm_ID"));
-
-  // console.log(formData);
-  for (const value of formData.values()) {
+  console.log(imageValidation);
+  if (u_id > 0) {
+    formData.append("id", u_id);
+    console.log(u_id);
+    const value = Object.fromEntries(formData.entries());
     console.log(value);
   }
+  console.log("first");
 
   if (isNaN(categoryValue.value)) {
-    console.log(image.value);
+    categoryValidation = false;
     pname.innerHTML = "Please Select a Category";
-  } else if (p_nameValue.value.length > 4 && p_nameValue.value.length < 20) {
-    fetch("http://localhost/sct/api/products/create.php", {
-      method: "POST",
-      headers: {
-        "Content-type": "multipart/form-data",
-      },
-      body: JSON.stringify({
-        ProductName: p_nameValue.value,
-        ProductDetails: detailValue.value,
-        categoriy_id: categoryValue.value,
-        ProductPrice: p_price.value,
-        image: files,
-      }),
+  } else if (
+    p_nameValue.value.length > 4 &&
+    p_nameValue.value.length < 20 &&
+    imageValidation === true &&
+    isNaN(categoryValue.value)
+  ) {
+    fetch(url, {
+      method: method,
+      body: formData,
     })
       .then((res) => res.json())
       .then((data) => {
@@ -217,8 +239,5 @@ addForm.addEventListener("submit", (event) => {
         renderUser(dataArr);
       })
       .then(() => showdata());
-  } else {
-    pname.innerHTML = "Please Select a Category";
   }
-  console.log("End");
 });

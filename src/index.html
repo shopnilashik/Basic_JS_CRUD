@@ -156,6 +156,7 @@
                     type="text"
                     for="Name"
                     id="p_name"
+                    name="ProductName"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                     placeholder="Enter Product Name"
                     required
@@ -170,6 +171,7 @@
                     <textarea
                       class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-gray-300 bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                       id="p_details"
+                      name="ProductDetails"
                       rows="3"
                       required
                       placeholder="Give your product details"
@@ -186,6 +188,7 @@
                     oninput="restrict(this)"
                     type="text"
                     for="price"
+                    name="ProductPrice"
                     id="p_price"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                     placeholder="Enter Product Price"
@@ -203,6 +206,8 @@
                       class="block form-select appearance-none w-[350px] px-3 py-1.5 text-base font-normal text-gray-700 bg-gray-300 bg-clip-padding bg-no-repeat border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                       aria-label="Default select example"
                       id="p_category"
+                      name="categoriy_id"
+                      onselect="categoriesFun()"
                     >
                       <option>Select Category</option>
                     </select>
@@ -211,20 +216,22 @@
 
                 <!-- IMAGE   -->
                 <div class="flex justify-center">
-                  <div class="mb-3 w-96">
+                  <div class="mb-3 w-[400px]">
                     <label
                       for="formFileSm"
-                      class="form-label inline-block mb-2 text-gray-700"
-                      >Small file input example</label
+                      class="form-label inline-block mb-2 text-gray-700 dark:text-gray-300"
+                      >Select Product Image</label
                     >
                     <input
                       id="image"
+                      name="image"
                       onChange="upload(event)"
                       class="form-control block w-full px-2 py-1 text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                       type="file"
                     />
                   </div>
                 </div>
+
                 <button
                   id="btnSubmit"
                   type="submit"
